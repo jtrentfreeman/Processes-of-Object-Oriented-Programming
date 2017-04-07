@@ -1,6 +1,5 @@
 package pong;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -27,7 +26,7 @@ public class Pong implements ActionListener, KeyListener
     public boolean invisBrick = false; // Bricks appear briefly when hit
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
-    public int gameStatus = 0, scoreLimit = 20, playerWon;
+    public int gameStatus = 0, scoreLimit = 11, playerWon;
 
     public int botDifficulty, botMoves, botCooldown = 0;
     public Random random;
@@ -170,7 +169,7 @@ public class Pong implements ActionListener, KeyListener
         else if (id == KeyEvent.VK_DOWN)
             down = true;
 
-        else if (id == KeyEvent.VK_RIGHT)
+        else if (id == KeyEvent.VK_RIGHT || id == KeyEvent.VK_D)
         {
             if (selectingDifficulty)
             {
@@ -184,7 +183,7 @@ public class Pong implements ActionListener, KeyListener
             else if (gameStatus == 0)
                 scoreLimit++;
         }
-        else if (id == KeyEvent.VK_LEFT)
+        else if (id == KeyEvent.VK_LEFT || id == KeyEvent.VK_A)
         {
             if (selectingDifficulty)
             {
