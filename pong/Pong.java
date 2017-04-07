@@ -42,7 +42,7 @@ public class Pong implements ActionListener, KeyListener
     {
         Timer timer = new Timer(20, this);
         random = new Random();
-        jframe = new JFrame("Pong");
+        jframe = new JFrame("Brick Pong");
         renderer = new Renderer();
 
         jframe.setSize(width + 16, height + 39);
