@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -21,11 +22,12 @@ public class Pong implements ActionListener, KeyListener
     public Paddle player1;
     public Paddle player2;
     public Ball ball;
+    public Brick[] bricks;
     public boolean bot = false, selectingDifficulty;
     public boolean w, s, up, down;
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
-    public int gameStatus = 0, scoreLimit = 7, playerWon;
+    public int gameStatus = 0, scoreLimit = 20, playerWon;
 
     public int botDifficulty, botMoves, botCooldown = 0;
     public Random random;
@@ -58,10 +60,24 @@ public class Pong implements ActionListener, KeyListener
         player1 = new Paddle(this, 1);
         player2 = new Paddle(this, 2);
         ball = new Ball(this);
+        
+        bricks = new Brick[4];
+        for( int i = 0; i < 4; i++)
+        {
+            Brick b = new Brick(pong, pong.width / 2, pong.height * i / 4);
+            bricks[i] = b;
+        }
     }
 
     public void update()
     {
+        for( int i = 0; i < 4; i++)
+        {
+            Brick b = bricks[i];
+            if( b != null && b.update(ball, player1, player2))
+                bricks[i] = null;
+        }
+        
         if (player1.score >= scoreLimit)
         {
             playerWon = 1;
@@ -181,29 +197,38 @@ public class Pong implements ActionListener, KeyListener
                 scoreLimit--;
         }
 
-
+        // Enter main menu
         else if (id == KeyEvent.VK_ESCAPE && (gameStatus == 2 || gameStatus == 3))
             gameStatus = 0;
 
+        // Enter bot menu
         else if (id == KeyEvent.VK_SHIFT && gameStatus == 0)
         {
             bot = true;
             selectingDifficulty = true;
         }
+        
+        // Start game or pause
         else if (id == KeyEvent.VK_SPACE)
         {
             if (gameStatus == 0 || gameStatus == 3)
             {
+                // Don't start game with bot
                 if (!selectingDifficulty)
                     bot = false;
+                
+                // Prevents starting over at bot menu
                 else
                     selectingDifficulty = false;
 
                 start();
             }
+            
+            // Unpause
             else if (gameStatus == 1)
                 gameStatus = 2;
 
+            // Pause
             else if (gameStatus == 2)
                 gameStatus = 1;
         }
@@ -233,12 +258,15 @@ public class Pong implements ActionListener, KeyListener
         // Empty
     }
     
+    // Renders the menu and board
     public void render(Graphics2D g)
     {
+        // Background
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, width, height);
         g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
+        // Enter menu
         if (gameStatus == 0)
         {
             g.setColor(Color.WHITE);
@@ -246,6 +274,7 @@ public class Pong implements ActionListener, KeyListener
 
             g.drawString("Brick Pong", width / 2 - 140, 50);
 
+            // Main menu
             if (!selectingDifficulty)
             {
                 g.setFont(new Font("Arial", 1, 30));
@@ -256,6 +285,7 @@ public class Pong implements ActionListener, KeyListener
             }
         }
 
+        // Bot menu
         if (selectingDifficulty)
         {
             String string = botDifficulty == 0 ? "Easy" : (botDifficulty == 1 ? "Medium" : "Hard");
@@ -266,6 +296,7 @@ public class Pong implements ActionListener, KeyListener
             g.drawString("Press Space to Play", width / 2 - 150, height / 2 + 25);
         }
 
+        // Pause screen
         if (gameStatus == 1)
         {
             g.setColor(Color.WHITE);
@@ -273,15 +304,10 @@ public class Pong implements ActionListener, KeyListener
             g.drawString("PAUSED", width / 2 - 103, height / 2 - 25);
         }
 
+        // Paused or Playing
         if (gameStatus == 1 || gameStatus == 2)
         {
             g.setColor(Color.WHITE);
-
-            //g.setStroke(new BasicStroke(5f));
-            //g.drawLine(width / 2, 0, width / 2, height);
-            //g.setStroke(new BasicStroke(2f));
-            //g.drawOval(width / 2 - 150, height / 2 - 150, 300, 300);
-
             g.setFont(new Font("Arial", 1, 50));
 
             g.drawString(String.valueOf(player1.score), width / 2 - 90, 50);
@@ -292,6 +318,7 @@ public class Pong implements ActionListener, KeyListener
             ball.render(g);
         }
 
+        // Game Over
         if (gameStatus == 3)
         {
             g.setColor(Color.WHITE);

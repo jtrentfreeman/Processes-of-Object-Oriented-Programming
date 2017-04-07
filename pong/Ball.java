@@ -9,7 +9,8 @@ public class Ball
     public int x, y, width = 25, height = 25;
     public int motionX, motionY;
     public Random random;
-    private Pong pong;
+    public Pong pong;
+    public int lastHit = 0;
     //public int amountOfHits;
     
     public Ball(Pong pong)
@@ -22,7 +23,7 @@ public class Ball
     // Update the ball's movement
     public void update(Paddle paddle1, Paddle paddle2)
     {
-        int speed = 5;
+        int speed = 8;
 
         this.x += motionX * speed;
         this.y += motionY * speed;
@@ -52,6 +53,7 @@ public class Ball
         // Ball hits paddle 1
         if(checkCollision(paddle1) == 1)
         {
+            lastHit = 1;
             this.motionX = 1;// + (amountOfHits / 5);
             this.motionY = -2 + random.nextInt(4);
 
@@ -63,6 +65,7 @@ public class Ball
         // Ball hits paddle 2
         else if(checkCollision(paddle2) == 1)
         {
+            lastHit = 2;
             this.motionX = -1;// - (amountOfHits / 5);
             this.motionY = -2 + random.nextInt(4);
 
@@ -74,21 +77,22 @@ public class Ball
         // Ball passes paddle 1
         if(checkCollision(paddle1) == 2)
         {
-            paddle2.score++;
+            paddle2.score += 3;
             spawn();
         }
         
         // Ball passes paddle 2
         else if(checkCollision(paddle2) == 2)
         {
-            paddle1.score++;
+            paddle1.score += 3;
             spawn();
         }
     }
     
     // Put new ball in center 
-    public void spawn()
+    private void spawn()
     {
+        lastHit = 0;
         //this.amountOfHits = 0;
         this.x = pong.width / 2 - this.width / 2;
         this.y = pong.height / 2 - this.height / 2;
@@ -98,11 +102,11 @@ public class Ball
         if(motionY == 0) motionY = 1;
 
         if(random.nextBoolean()) motionX = 1;
-        else    motionX = -1;
+        else motionX = -1;
     }
     
     // Check where the ball hits; 0 = nothing, 1 = bounce, 2 = score
-    public int checkCollision(Paddle paddle)
+    private int checkCollision(Paddle paddle)
     {
         if(this.x < paddle.x + paddle.width && this.x + width > paddle.x && this.y < paddle.y + paddle.height && this.y + height > paddle.y)
             return 1; 
