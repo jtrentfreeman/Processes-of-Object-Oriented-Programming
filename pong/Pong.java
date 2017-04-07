@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -25,6 +24,7 @@ public class Pong implements ActionListener, KeyListener
     public Brick[] bricks;
     public boolean bot = false, selectingDifficulty;
     public boolean w, s, up, down;
+    public boolean invisBrick = false; // Bricks appear briefly when hit
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
     public int gameStatus = 0, scoreLimit = 20, playerWon;
@@ -71,6 +71,7 @@ public class Pong implements ActionListener, KeyListener
 
     public void update()
     {
+        // Bricks
         for( int i = 0; i < 4; i++)
         {
             Brick b = bricks[i];
@@ -316,6 +317,16 @@ public class Pong implements ActionListener, KeyListener
             player1.render(g);
             player2.render(g);
             ball.render(g);
+            
+            // Bricks
+            for( int i = 0; i < 4; i++)
+            {
+                Brick b = bricks[i];
+                if(b != null && !invisBrick)
+                    b.render(g);
+                else if (b != null && b.update(ball, player1, player2))
+                    b.render(g);
+            }
         }
 
         // Game Over
