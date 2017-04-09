@@ -35,6 +35,9 @@ public class Pong implements ActionListener, KeyListener
     public static void main(String[] args)
     {
         pong = new Pong();
+	
+	Audio player = new Audio("Automation");
+        player.runBGM();
     }
 
     public Pong()
@@ -66,9 +69,6 @@ public class Pong implements ActionListener, KeyListener
             Brick b = new Brick(pong, pong.width / 2, pong.height * i / 4);
             bricks[i] = b;
         }
-	
-	Audio player = new Audio("Automation");
-        player.runBGM();
     }
 
     public void update()
