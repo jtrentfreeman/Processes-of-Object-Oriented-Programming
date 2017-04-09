@@ -22,6 +22,9 @@ public class Brick {
         // Check if touches ball
         if(this.x < ball.x + ball.width && this.x + width > ball.x && this.y < ball.y + ball.height && this.y + height > ball.y)
         {
+            Audio player = new Audio("brick");
+            player.runSound();
+            
             ball.motionX = -1;
             
             if(ball.lastHit == 1)
