@@ -275,16 +275,16 @@ public class Pong implements ActionListener, KeyListener
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
 
-            g.drawString("Brick Pong", width / 2 - 170, 50);
+            g.drawString("Brick Pong", width / 2 - 140, 50);
 
             // Main menu
             if (!selectingDifficulty)
             {
                 g.setFont(new Font("Arial", 1, 30));
 
-                g.drawString("Press Space to Play", width / 2 - 190, height / 2 - 25);
-                g.drawString("Press Shift to Play with Bot", width / 2 - 255, height / 2 + 25);
-                g.drawString("<< Score Limit: " + scoreLimit + " >>", width / 2 - 215, height / 2 + 75);
+                g.drawString("Press Space to Play", width / 2 - 150, height / 2 - 25);
+                g.drawString("Press Shift to Play with Bot", width / 2 - 200, height / 2 + 25);
+                g.drawString("<< Score Limit: " + scoreLimit + " >>", width / 2 - 150, height / 2 + 75);
             }
         }
 
