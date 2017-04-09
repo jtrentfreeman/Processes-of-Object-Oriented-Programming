@@ -31,6 +31,8 @@ public class Ball
         // Don't let ball go out of bounds
         if(this.y + height - motionY > pong.height || this.y + motionY < 0)
         {
+            sound("wall");
+            
             // Bottom bound
             if(this.motionY < 0)
             {
@@ -53,6 +55,7 @@ public class Ball
         // Ball hits paddle 1
         if(checkCollision(paddle1) == 1)
         {
+            sound("paddle");
             lastHit = 1;
             this.motionX = 1;// + (amountOfHits / 5);
             this.motionY = -2 + random.nextInt(4);
@@ -65,6 +68,7 @@ public class Ball
         // Ball hits paddle 2
         else if(checkCollision(paddle2) == 1)
         {
+            sound("paddle");
             lastHit = 2;
             this.motionX = -1;// - (amountOfHits / 5);
             this.motionY = -2 + random.nextInt(4);
@@ -77,6 +81,7 @@ public class Ball
         // Ball passes paddle 1
         if(checkCollision(paddle1) == 2)
         {
+            sound("score");
             paddle2.score += 3;
             spawn();
         }
@@ -84,9 +89,15 @@ public class Ball
         // Ball passes paddle 2
         else if(checkCollision(paddle2) == 2)
         {
+            sound("score");
             paddle1.score += 3;
             spawn();
         }
+    }
+    
+    private void sound(String fileName) {
+        Audio player = new Audio(fileName);
+        player.runSound();
     }
     
     // Put new ball in center 
