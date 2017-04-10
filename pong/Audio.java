@@ -17,10 +17,20 @@ public class Audio {
 
     public Audio(String... files){
         musicFiles = new ArrayList<String>();
-
-        //Specify proper file path and have .wav audio file
-        for(String file : files)
-            musicFiles.add("./pong/" + file + ".wav");
+        
+        String OS = System.getProperty("os.name");
+        Boolean Windows = false;
+        
+        if( OS.length() > 8 )
+            Windows = "Windows".equals(OS.substring(0,7));
+        
+        // Specify proper file path and have .wav audio file.
+        if( Windows )
+            for(String file : files)
+                musicFiles.add("./src/pong/" + file + ".wav");
+        else
+            for(String file : files)
+                musicFiles.add("./pong/" + file + ".wav");
     }
 
     private void playBGM(String fileName){
