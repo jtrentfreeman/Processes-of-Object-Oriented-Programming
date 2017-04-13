@@ -21,7 +21,7 @@ public class Pong implements ActionListener, KeyListener
     public Paddle player2;
     public Ball ball;
     public Brick[] bricks;
-    public boolean bot = false, selectingDifficulty;
+    public boolean bot = false, selectingDifficulty, helpMenu;
     public boolean w, s, up, down;
     public boolean invisBrick = false; // Bricks appear briefly when hit
 
@@ -203,16 +203,28 @@ public class Pong implements ActionListener, KeyListener
         // Enter main menu
         else if (id == KeyEvent.VK_ESCAPE && (gameStatus == 2 || gameStatus == 3))
             gameStatus = 0;
+	    
+	// View help menu
+        else if (id == KeyEvent.VK_H && gameStatus == 0 && helpMenu == false)
+        {
+            helpMenu = true;
+        }
+
+        // Close help menu
+        else if (id == KeyEvent.VK_H && gameStatus == 0 && helpMenu == true)
+        {
+            helpMenu = false;
+        }
 
         // Enter bot menu
-        else if (id == KeyEvent.VK_SHIFT && gameStatus == 0)
+        else if (id == KeyEvent.VK_SHIFT && gameStatus == 0 && helpMenu == false)
         {
             bot = true;
             selectingDifficulty = true;
         }
         
         // Start game or pause
-        else if (id == KeyEvent.VK_SPACE)
+        else if (id == KeyEvent.VK_SPACE && helpMenu == false)
         {
             if (gameStatus == 0 || gameStatus == 3)
             {
@@ -270,7 +282,7 @@ public class Pong implements ActionListener, KeyListener
         g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
         // Enter menu
-        if (gameStatus == 0)
+        if (gameStatus == 0 && helpMenu == false)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
@@ -297,6 +309,32 @@ public class Pong implements ActionListener, KeyListener
 
             g.drawString("<< Bot Difficulty: " + string + " >>", width / 2 - 180, height / 2 - 25);
             g.drawString("Press Space to Play", width / 2 - 150, height / 2 + 25);
+        }
+	
+	// help menu
+	if (helpMenu)
+        {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", 1, 50));
+            g.drawString("HELP MENU", width / 2 - 180, height / 2 - 250);
+            g.setFont(new Font("Arial", 1, 20));
+            String nav = "Navigation";
+            String paddle = "Paddle";
+            String close = "Close Help";
+            String navSpace = "space - multiplayer";
+            String navShift = "shift - singleplayer";
+            String navChoose = "a/d or left/right arrows to choose settings";
+            String player1 = "Player 1 - w (up), s (down)";
+            String player2 = "Player 2 - up arrow (up), down arrow (down)";
+            g.drawString(nav, 100, height / 2 - 180);
+            g.drawString(navSpace, 150, height / 2 - 140);
+            g.drawString(navShift, 150, height / 2 - 100);
+            g.drawString(navChoose, 150, height / 2 - 60);
+            g.drawString(paddle, 100, height / 2 - 20);
+            g.drawString(player1, 150, height / 2 + 20);
+            g.drawString(player2, 150, height / 2 + 60);
+            g.drawString(close, 100, height / 2 + 100);
+            g.drawString("h", 150, height / 2 + 140);
         }
 
         // Pause screen
