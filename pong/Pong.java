@@ -8,7 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -63,18 +70,62 @@ public class Pong implements ActionListener, KeyListener
         player2 = new Paddle(this, 2);
         ball = new Ball(this);
         
-        bricks = new Brick[4];
-        for( int i = 0; i < 4; i++)
+        // 10 x 5 grid of bricks
+        bricks = new Brick[50];
+        for( int i = 0; i < 5; i++)
         {
-            Brick b = new Brick(pong, pong.width / 2, pong.height * i / 4);
-            bricks[i] = b;
+            for( int j = 0; j < 10; j++)
+            {   
+                // Middle 3/7 of screen, gaps of 20
+                Brick b = new Brick(pong, pong.width * 2/7 + (j*60) + 10, pong.height * i/5 +10);
+                bricks[10*i+j] = b;
+            }
         }
+        
+        // File path for BrickGrid.txt depends on OS
+        String OS = System.getProperty("os.name");
+        Boolean Windows = false;
+        
+        if( OS.length() > 8 )
+            Windows = "Windows".equals(OS.substring(0,7));
+        
+        Scanner scanner;
+        try {
+
+            // Get correct path
+            if( Windows )
+                scanner = new Scanner( new File("./src/pong/BrickGrid.txt"));
+            else
+                scanner = new Scanner( new File("./pong/BrickGrid.txt"));
+
+            String map = "";
+            String more;
+            while( scanner.hasNextLine() )
+            {
+                more = scanner.nextLine();
+                map = map.concat(more);
+            }
+
+            // Set blocks to null if appropriate
+            // Can later be used to define blocks with power ups, etc.
+            for( int i = 0; i < 5; i++)
+                for( int j = 0; j < 10; j++)
+                    if( map.charAt(10*i+j) == '0' )
+                        bricks[10*i+j] = null;
+
+            scanner.close();
+            
+        // If FNF, all bricks will be shown without crashing
+        } catch (FileNotFoundException ex) {
+            ;
+        }
+        
     }
 
     public void update()
     {
         // Bricks
-        for( int i = 0; i < 4; i++)
+        for( int i = 0; i < bricks.length; i++)
         {
             Brick b = bricks[i];
             if( b != null && b.update(ball, player1, player2))
@@ -359,10 +410,10 @@ public class Pong implements ActionListener, KeyListener
             ball.render(g);
             
             // Bricks
-            for( int i = 0; i < 4; i++)
+            for( int i = 0; i < bricks.length; i++)
             {
                 Brick b = bricks[i];
-                if(b != null && !invisBrick)
+                if(b != null)
                     b.render(g);
                 else if (b != null && b.update(ball, player1, player2))
                     b.render(g);
