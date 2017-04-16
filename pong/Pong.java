@@ -324,15 +324,15 @@ public class Pong implements ActionListener, KeyListener
             String navSpace = "space - multiplayer";
             String navShift = "shift - singleplayer";
             String navChoose = "a/d or left/right arrows to choose settings";
-            String player1 = "Player 1 - w (up), s (down)";
-            String player2 = "Player 2 - up arrow (up), down arrow (down)";
+            String player1String = "Player 1 - w (up), s (down)";
+            String player2String = "Player 2 - up arrow (up), down arrow (down)";
             g.drawString(nav, 100, height / 2 - 180);
             g.drawString(navSpace, 150, height / 2 - 140);
             g.drawString(navShift, 150, height / 2 - 100);
             g.drawString(navChoose, 150, height / 2 - 60);
             g.drawString(paddle, 100, height / 2 - 20);
-            g.drawString(player1, 150, height / 2 + 20);
-            g.drawString(player2, 150, height / 2 + 60);
+            g.drawString(player1String, 150, height / 2 + 20);
+            g.drawString(player2String, 150, height / 2 + 60);
             g.drawString(close, 100, height / 2 + 100);
             g.drawString("h", 150, height / 2 + 140);
         }
