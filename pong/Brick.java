@@ -25,7 +25,7 @@ public class Brick {
             Audio player = new Audio("brick");
             player.runSound();
             
-            ball.motionX = -1;
+            ball.motionX = -(ball.motionX);
             
             if(ball.lastHit == 1)
                 p1.score += this.points;
