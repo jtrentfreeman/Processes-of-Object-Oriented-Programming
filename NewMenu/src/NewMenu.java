@@ -28,6 +28,7 @@ public class NewMenu {
 	
 	// buttons for options menu
 	private JButton backOptions;	// go back to main menu from options
+	private JButton backQuit;
 	private JButton backHelp;		// go back to ...			 help
 	private JButton mText;			// music text
 	private JButton mOn;			// music icon 3 bars
@@ -70,18 +71,29 @@ public class NewMenu {
 		help.setSize(WIDTH, (int) (WIDTH*1.5));
 		
 		// grabs the images from NewMenu/src/resources (and also held in NewMenu/bin/resources) (For Eclipse)
-		ImageIcon mOnIcon = new ImageIcon("/resources/musicHigh.png");
-		ImageIcon mLowIcon = new ImageIcon("/resources/musicLow.png");
-		ImageIcon mOffIcon = new ImageIcon("/resources/musicOff.png");
+		ImageIcon mOnIcon = new ImageIcon("musicHigh.png");
+		ImageIcon mLowIcon = new ImageIcon("musicLow.png");
+		ImageIcon mOffIcon = new ImageIcon("musicOff.png");
 			
 		// set the icons to their buttons
-		mText = new JButton("Music Volume:");
+		mText = new JButton("Music\nVolume:");
+		
+		
 		mOn = new JButton(mOnIcon);
 		mOn.setVisible(true);
-		mLow = new JButton(mOnIcon);
+		mLow = new JButton(mLowIcon);
 		mLow.setVisible(true);
 		mOff = new JButton(mOffIcon);
 		mOff.setVisible(true);
+		
+		sOn = new JButton("sOnIcon");
+		sOn.setVisible(true);
+		sLow = new JButton("sLowIcon");
+		sLow.setVisible(true);
+		sOff = new JButton("sOffIcon");
+		sOff.setVisible(true);
+		
+		sText = new JButton("Sound Volume");
 
 		// setting up the music option buttons
 		JLabel mOnL = new JLabel(mOnIcon);
@@ -89,6 +101,7 @@ public class NewMenu {
 		mOnL.setOpaque(true);
 		mOnL.setBorder(new LineBorder(Color.BLACK));
 		mOnL.setBackground(Color.WHITE);
+		mOnL.setVisible(true);
 		JLabel mLowL = new JLabel(mLowIcon);
 		mLowL.setIcon(mLowIcon);
 		mLowL.setOpaque(true);
@@ -101,19 +114,42 @@ public class NewMenu {
 		mOffL.setVisible(true);
 		mOffL.setBackground(Color.WHITE);
 		
-		// soundPanel will hold the music and sound buttons (off, low, high)
-		JPanel soundPanel = new JPanel(new GridLayout(4, 2, 0, 0));
-		options.add(soundPanel);
+		JButton space = new JButton("something");
 		
+		JLabel soundB = new JLabel("<html><center>Sound</center><br /><center>Volume</center></html>");
+		JLabel musicB = new JLabel("<html><center>Music</center><br /><center>Volume</center></html>");
+		
+		// soundPanel will hold the music and sound buttons (off, low, high)
+		JPanel soundPanel = new JPanel(new GridLayout(3, 4, -2, 20));
+		options.getContentPane().add(BorderLayout.CENTER, soundPanel);
+		
+		soundPanel.add(soundB).setLocation(0, 0);
+		soundPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		soundPanel.add(mOff).setLocation(0, 1);
+		soundPanel.add(mLow).setLocation(0, 2);
+		soundPanel.add(mOn).setLocation(0, 3);
+		
+		backOptions = new JButton("Back");
+		backQuit = new JButton("Quit");
+		
+		soundPanel.add(musicB).setLocation(1, 0);
+		soundPanel.add(sOff).setLocation(1, 1);
+		soundPanel.add(sLow).setLocation(1, 2);
+		soundPanel.add(sOn).setLocation(1, 3);
+		
+		soundPanel.add(space).setLocation(2, 1);
+		soundPanel.add(space).setLocation(2, 0);
+		soundPanel.add(backOptions).setLocation(2, 2);
+		soundPanel.add(backQuit).setLocation(2,3);
+		space.setVisible(false);
+		backOptions.setVisible(true);
+
 		// adding proper bits into the frame
 		// still doesn't show icons, not sure why
-		soundPanel.add(Box.createRigidArea(new Dimension(5, 10)));
-		soundPanel.add(mOnL);
-		soundPanel.add(mLowL);
-		soundPanel.add(mOffL);
-		soundPanel.setOpaque(false);
 		soundPanel.setVisible(true);
 		soundPanel.setBorder(BorderFactory.createEmptyBorder(200, 100, 200, 100));	
+		
+		options.add(soundPanel);
 		
 		// setting up the main menu
 		JPanel top = new JPanel();
@@ -200,7 +236,7 @@ public class NewMenu {
 			public void actionPerformed(ActionEvent e)
 			{
 				options.setVisible(true);
-				menu.dispose();
+				menu.setVisible(false);
 			}
 		});
 		
@@ -213,9 +249,27 @@ public class NewMenu {
 			}
 		});
 		
+		backOptions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				options.setVisible(false);
+				menu.setVisible(true);
+			}
+			
+		});
+		
+		backQuit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				options.dispose();
+				System.exit(0);
+			}
+		});
+		
 		options.setDefaultCloseOperation(options.EXIT_ON_CLOSE);
 		menu.setDefaultCloseOperation(menu.EXIT_ON_CLOSE);
 		menu.setVisible(true);
+		options.setDefaultCloseOperation(options.EXIT_ON_CLOSE);
 		
 	}
 	
@@ -235,3 +289,4 @@ public class NewMenu {
 	}
 	
 }
+
