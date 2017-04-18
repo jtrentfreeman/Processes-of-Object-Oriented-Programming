@@ -11,13 +11,17 @@ public class Ball
     public Random random;
     public Pong pong;
     public int lastHit = 0;
-    //public int amountOfHits;
     
     public Ball(Pong pong)
     {
         this.pong = pong;
         this.random = new Random();
         spawn();
+    }
+    
+    public int getLastHit()
+    {
+        return this.lastHit;
     }
     
     // Update the ball's movement
@@ -57,12 +61,11 @@ public class Ball
         {
             sound("paddle");
             lastHit = 1;
-            this.motionX = 1;// + (amountOfHits / 5);
+            this.motionX = 1;
             this.motionY = -2 + random.nextInt(4);
 
             if(motionY == 0) motionY = 1;
 
-            //amountOfHits++;
         }
         
         // Ball hits paddle 2
@@ -70,12 +73,11 @@ public class Ball
         {
             sound("paddle");
             lastHit = 2;
-            this.motionX = -1;// - (amountOfHits / 5);
+            this.motionX = -1;
             this.motionY = -2 + random.nextInt(4);
 
             if(motionY == 0) motionY = 1;
 
-            //amountOfHits++;
         }
         
         // Ball passes paddle 1
@@ -104,7 +106,6 @@ public class Ball
     private void spawn()
     {
         lastHit = 0;
-        //this.amountOfHits = 0;
         this.x = pong.width / 2 - this.width / 2;
         this.y = pong.height / 2 - this.height / 2;
 
