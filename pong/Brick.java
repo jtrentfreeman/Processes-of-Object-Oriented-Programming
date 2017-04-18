@@ -5,22 +5,41 @@ import java.awt.Graphics;
 
 public class Brick {
     
-    public int x, y, width = 30, height = 50;
+    public int x, y, width, height;
     public int points = 1;
-    //public int motionX, motionY; // possible feature
+    public Pong pong;
+    public Item item;
     
     public Brick(Pong pong, int x, int y)
     {
-        this.x = x;
+        this.height = (pong.height - 100) / 5;  // h = 120
+        this.width = pong.width/35;             // w = 40
+        this.pong = pong;
+        this.x = x ;
         this.y = y;
     }
+    
+    public void setItem(int effect, int number)
+    {
+        this.item = new Item( this.pong, effect, this, number );
+    }
+    
+    public int getX() { return this.x; }
+    
+    public int getY() { return this.y; }
+    
+    public int getWidth() { return this.width; }
+    
+    public int getHeight() { return this.height; }
+    
+    public Item getItem() { return this.item; }
     
     // Update the brick's visibility
     // True means to delete brick
     public boolean update(Ball ball, Paddle p1, Paddle p2)
     {
         // Check if touches ball
-        if(this.x < ball.x + ball.width && this.x + width > ball.x && this.y < ball.y + ball.height && this.y + height > ball.y)
+        if(this.x <= ball.x + ball.width && this.x + width >= ball.x && this.y <= ball.y + ball.height && this.y + height >= ball.y)
         {
             Audio player = new Audio("brick");
             player.runSound();
