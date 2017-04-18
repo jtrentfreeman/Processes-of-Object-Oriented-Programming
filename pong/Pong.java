@@ -10,12 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -28,12 +24,13 @@ public class Pong implements ActionListener, KeyListener
     public Paddle player2;
     public Ball ball;
     public Brick[] bricks;
+    public Item[] items;
     public boolean bot = false, selectingDifficulty, helpMenu;
     public boolean w, s, up, down;
     public boolean invisBrick = false; // Bricks appear briefly when hit
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
-    public int gameStatus = 0, scoreLimit = 11, playerWon;
+    public int gameStatus = 0, scoreLimit = 15, playerWon;
 
     public int botDifficulty, botMoves, botCooldown = 0;
     public Random random;
@@ -72,6 +69,7 @@ public class Pong implements ActionListener, KeyListener
         
         // 10 x 5 grid of bricks
         bricks = new Brick[50];
+        items = new Item[50];
         for( int i = 0; i < 5; i++)
         {
             for( int j = 0; j < 10; j++)
@@ -89,6 +87,7 @@ public class Pong implements ActionListener, KeyListener
         if( OS.length() > 8 )
             Windows = "Windows".equals(OS.substring(0,7));
         
+        // Generate Bricks
         Scanner scanner;
         try {
 
@@ -106,30 +105,70 @@ public class Pong implements ActionListener, KeyListener
                 map = map.concat(more);
             }
 
-            // Set blocks to null if appropriate
-            // Can later be used to define blocks with power ups, etc.
+            // Set blocks to null, give item, or neither
+            // 
             for( int i = 0; i < 5; i++)
+            {
                 for( int j = 0; j < 10; j++)
+                {
+                    // 0: up paddle size, 1: add point, 2: damage, 3: health
                     if( map.charAt(10*i+j) == '0' )
                         bricks[10*i+j] = null;
+                    
+                    else if( map.charAt(10*i+j) == '2' )
+                        bricks[10*i+j].setItem(0,10*i+j);
+                    
+                    else if( map.charAt(10*i+j) == '3' )
+                        bricks[10*i+j].setItem(1,10*i+j);
+                    
+                    else if( map.charAt(10*i+j) == '4' )
+                        bricks[10*i+j].setItem(2,10*i+j);
+                    
+                    else if( map.charAt(10*i+j) == '5' )
+                        bricks[10*i+j].setItem(3,10*i+j);
+                    
+                    // Random non-null if unknown char
+                    else if( map.charAt(10*i+j) != '1' )
+                        bricks[10*i+j].setItem((int) ( Math.random() * 4) + 1, 10*i+j);
+                }
+            }
 
             scanner.close();
             
         // If FNF, all bricks will be shown without crashing
         } catch (FileNotFoundException ex) {
-            ;
+            
         }
         
+    }
+    
+    public void deleteItem( int number )
+    {
+        this.items[number] = null;
     }
 
     public void update()
     {
-        // Bricks
+        // Bricks & Items
         for( int i = 0; i < bricks.length; i++)
         {
             Brick b = bricks[i];
+            
+            // Check existence
             if( b != null && b.update(ball, player1, player2))
+            {
+                Item brickItem = b.getItem();
+                
+                // If has item, spawn it
+                if( brickItem != null )
+                {
+                    items[i] = brickItem;
+                    brickItem.spawn();
+                }
+                
+                // Delete Brick
                 bricks[i] = null;
+            }
         }
         
         if (player1.score >= scoreLimit)
@@ -195,6 +234,29 @@ public class Pong implements ActionListener, KeyListener
         }
 
         ball.update(player1, player2);
+        
+        for( Item item : this.items )
+            if( item != null )
+                item.update(player1, player2);
+        
+        if( player1.hasPower() )
+            player1.reducePowerDuration();
+        
+        if( player2.hasPower() )
+            player2.reducePowerDuration();
+        
+        // Tie, pick random winner :P
+        if( player1.getHealth() == 0 && player2.getHealth() == 0)
+            if( (int) (Math.random() * 2) == 1)
+                player2.instantWin( scoreLimit );
+        
+        // Player 1 died, player 2 wins
+        if( player1.getHealth() == 0 )
+            player2.instantWin( scoreLimit );
+        
+        // Player 2 died, player 1 wins
+        if( player2.getHealth() == 0 )
+            player1.instantWin( scoreLimit );
     }
 
     @Override
@@ -410,14 +472,18 @@ public class Pong implements ActionListener, KeyListener
             ball.render(g);
             
             // Bricks
-            for( int i = 0; i < bricks.length; i++)
-            {
-                Brick b = bricks[i];
+            for (Brick b : bricks) {
                 if(b != null)
                     b.render(g);
-                else if (b != null && b.update(ball, player1, player2))
+                else if (b != null && b.update(ball, player1, player2)) // Seems unecessary
                     b.render(g);
             }
+            
+            // Items
+            for( Item item : this.items )
+                if( item != null )
+                    item.render(g);
+            
         }
 
         // Game Over
