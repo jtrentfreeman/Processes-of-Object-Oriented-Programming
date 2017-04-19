@@ -8,11 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 
 public class Pong implements ActionListener, KeyListener
@@ -33,8 +38,10 @@ public class Pong implements ActionListener, KeyListener
     public int gameStatus = 0, scoreLimit = 15, playerWon;
 
     public int botDifficulty, botMoves, botCooldown = 0;
+    public boolean Windows;
     public Random random;
     public JFrame jframe;
+    public BufferedImage image;
     
     public static void main(String[] args)
     {
@@ -56,7 +63,24 @@ public class Pong implements ActionListener, KeyListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.add(renderer);
         jframe.addKeyListener(this);
+        
+        // Save background image for update()
+        try {
+            String OS = System.getProperty("os.name");
+            Windows = false;
 
+            if( OS.length() > 8 )
+                Windows = "Windows".equals(OS.substring(0,7));
+
+            // Specify proper file path and have .wav audio file.
+            if( Windows )
+                image = ImageIO.read(new File("./src/pong/genericBackground.jpg"));
+            else
+                image = ImageIO.read(new File("./pong/genericBackground.jpg"));
+            
+        } catch(Exception e) {
+        }
+        
         timer.start();
     }
 
@@ -79,13 +103,6 @@ public class Pong implements ActionListener, KeyListener
                 bricks[10*i+j] = b;
             }
         }
-        
-        // File path for BrickGrid.txt depends on OS
-        String OS = System.getProperty("os.name");
-        Boolean Windows = false;
-        
-        if( OS.length() > 8 )
-            Windows = "Windows".equals(OS.substring(0,7));
         
         // Generate Bricks
         Scanner scanner;
@@ -111,7 +128,7 @@ public class Pong implements ActionListener, KeyListener
             {
                 for( int j = 0; j < 10; j++)
                 {
-                    // 0: up paddle size, 1: add point, 2: damage, 3: health
+                    // 2: up paddle size, 3: add point, 4: damage, 5: health
                     if( map.charAt(10*i+j) == '0' )
                         bricks[10*i+j] = null;
                     
@@ -149,6 +166,7 @@ public class Pong implements ActionListener, KeyListener
 
     public void update()
     {
+        
         // Bricks & Items
         for( int i = 0; i < bricks.length; i++)
         {
@@ -387,11 +405,13 @@ public class Pong implements ActionListener, KeyListener
     }
     
     // Renders the menu and board
-    public void render(Graphics2D g)
+    public void render(Graphics2D g) throws IOException
     {
         // Background
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
+        //backGround = new JLabel(new ImageIcon("./src/pong/genericBackground.jpg"));
+        //g.setColor(Color.BLACK);
+        //g.fillRect(0, 0, width, height);
+        g.drawImage( image, 0, 0, null);
         g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
         // Enter menu
@@ -455,7 +475,7 @@ public class Pong implements ActionListener, KeyListener
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
-            g.drawString("PAUSED", width / 2 - 103, height / 2 - 25);
+            g.drawString("Pause", width / 2 - 103, height / 2 - 25);
         }
 
         // Paused or Playing
