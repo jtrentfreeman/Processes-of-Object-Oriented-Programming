@@ -13,10 +13,14 @@ import java.awt.event.*;
 // not sure how to add background or pictures, if somebody wants to look into that
 public class NewMenu {
 
+	int levelsComplete = 0;
+	
 	// frames
 	private JFrame menu;
+	private JFrame levelMenu;
 	private JFrame options;
 	private JFrame help;
+	
 	
 	// buttons for main menu
 	private JButton p1;
@@ -29,12 +33,10 @@ public class NewMenu {
 	// buttons for options menu
 	private JButton backOptions;	// go back to main menu from options
 	private JButton backQuit;
-	private JButton backHelp;		// go back to ...			 help
-	private JButton mText;			// music text
+	private JButton backHelp;		// go back to main menu from help
 	private JButton mOn;			// music icon 3 bars
 	private JButton mLow;			// music icon 1 bar
 	private JButton mOff;			// music icon 0 bars
-	private JButton sText;			// sound text
 	private JButton sOn;			// sound icon 3 bars
 	private JButton sLow;			// sound icon 1 bar
 	private JButton sOff;			// sound icon 0 bars
@@ -62,23 +64,26 @@ public class NewMenu {
 		
 		// set up the initial frames
 		menu = new JFrame("Main Menu");
-		menu.setSize(WIDTH, (int) (WIDTH*1.5));
+		menu.setSize(1400, 700);
+		
+		levelMenu = new JFrame("Level Select");
+		levelMenu.setSize(1400, 700);
 		
 		options = new JFrame("Options");
-		options.setSize(WIDTH, (int) (WIDTH*1.5));
+		options.setSize(1400, 700);
 		
 		help = new JFrame("Help");
-		help.setSize(WIDTH, (int) (WIDTH*1.5));
+		help.setSize(1400, 700);
 		
 		// grabs the images from NewMenu/src/resources (and also held in NewMenu/bin/resources) (For Eclipse)
 		ImageIcon mOnIcon = new ImageIcon("musicHigh.png");
 		ImageIcon mLowIcon = new ImageIcon("musicLow.png");
 		ImageIcon mOffIcon = new ImageIcon("musicOff.png");
+//		ImageIcon mOnIcon = new ImageIcon(getClass().getResource("/resources/musicHigh.png"));
+//		ImageIcon mLowIcon = new ImageIcon(getClass().getResource("/resources/musicLow.png"));
+//		ImageIcon mOffIcon = new ImageIcon(getClass().getResource("/resources/musicOff.png"));
 			
 		// set the icons to their buttons
-		mText = new JButton("Music\nVolume:");
-		
-		
 		mOn = new JButton(mOnIcon);
 		mOn.setVisible(true);
 		mLow = new JButton(mLowIcon);
@@ -93,8 +98,32 @@ public class NewMenu {
 		sOff = new JButton("sOffIcon");
 		sOff.setVisible(true);
 		
-		sText = new JButton("Sound Volume");
+		JPanel mainLevelPanel = new JPanel();
+		JPanel levelPanel = new JPanel(new GridLayout(4, 2, 5, 20));
+		levelMenu.getContentPane().add(BorderLayout.CENTER, levelPanel);
+		JButton level1 = new JButton("LEVEL 1");
+		level1.setOpaque(true);
+		JButton level2 = new JButton("LEVEL 2");
+		level2.setOpaque(false);
+		JButton level3 = new JButton("LEVEL 3");
+		JButton level4 = new JButton("LEVEL 4");
+		JButton level5 = new JButton("LEVEL 5");
+		JButton level6 = new JButton("LEVEL 6");
+		JButton backLevels = new JButton("BACK");
+		JButton quitLevels = new JButton("QUIT");
+		levelPanel.add(level1).setLocation(0, 0);
+		levelPanel.add(level2).setLocation(0, 1);
+		levelPanel.add(level3).setLocation(1, 0);
+		levelPanel.add(level4).setLocation(1, 1);
+		levelPanel.add(level5).setLocation(2, 0);
+		levelPanel.add(level6).setLocation(2, 1);
+		levelPanel.add(backLevels).setLocation(3, 0);
+		levelPanel.add(quitLevels).setLocation(3, 1);
+		levelPanel.setPreferredSize(new Dimension(175, 350));
+		levelPanel.setBorder(BorderFactory.createEmptyBorder(50, 350, 50, 350));
+		levelPanel.setVisible(true);
 
+		
 		// setting up the music option buttons
 		JLabel mOnL = new JLabel(mOnIcon);
 		mOnL.setIcon(mOnIcon);
@@ -114,7 +143,7 @@ public class NewMenu {
 		mOffL.setVisible(true);
 		mOffL.setBackground(Color.WHITE);
 		
-		JButton space = new JButton("something");
+		JButton space = new JButton("empty button");
 		
 		JLabel soundB = new JLabel("<html><center>Sound</center><br /><center>Volume</center></html>");
 		JLabel musicB = new JLabel("<html><center>Music</center><br /><center>Volume</center></html>");
@@ -209,7 +238,8 @@ public class NewMenu {
 		p1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				menu.dispose();
+				menu.setVisible(false);
+				levelMenu.setVisible(true);
 				// open the single player game
 			}
 		});
@@ -266,11 +296,92 @@ public class NewMenu {
 			}
 		});
 		
-		options.setDefaultCloseOperation(options.EXIT_ON_CLOSE);
-		menu.setDefaultCloseOperation(menu.EXIT_ON_CLOSE);
-		menu.setVisible(true);
-		options.setDefaultCloseOperation(options.EXIT_ON_CLOSE);
+		level1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				levelMenu.setVisible(false);
+				// open level 1
+			}
+		});
 		
+		level2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(getLevelProgress() > 1)
+				{
+					levelMenu.setVisible(false);
+					// open level 2
+				}
+			}
+		});
+		
+		level3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(getLevelProgress() > 2)
+				{
+					levelMenu.setVisible(false);
+					// open level 3
+			
+				}
+			}
+		});
+		
+		level4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(getLevelProgress() > 3)
+				{
+					levelMenu.setVisible(false);
+					// open level 3
+				}
+			}
+		});
+		
+		level5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(getLevelProgress() > 4)
+				{	
+					levelMenu.setVisible(false);
+					// open level 3
+				}
+			}
+		});
+		
+		level6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				if(getLevelProgress() > 5)
+				{
+					levelMenu.setVisible(false);
+					// open level 3
+				}
+			}
+		});
+		
+		backLevels.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				levelMenu.setVisible(false);
+				menu.setVisible(true);
+			}
+		});
+		
+		quitLevels.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				levelMenu.dispose();
+				System.exit(0);
+			}
+		});
+		
+		menu.setDefaultCloseOperation(menu.EXIT_ON_CLOSE);
+		options.setDefaultCloseOperation(options.EXIT_ON_CLOSE);
+		levelMenu.setDefaultCloseOperation(levelMenu.EXIT_ON_CLOSE);
+		help.setDefaultCloseOperation(help.EXIT_ON_CLOSE);
+		
+		menu.setVisible(true);
 	}
 	
 	// creating new image
@@ -288,5 +399,9 @@ public class NewMenu {
 		}
 	}
 	
+	public int getLevelProgress()
+	{
+		return levelsComplete;
+	}
+	
 }
-
