@@ -8,20 +8,21 @@ public class Ball
 {
     public int x, y, width = 25, height = 25;
     public int motionX, motionY;
+    public int side = 1;
     public Random random;
     public Pong pong;
+    public Ball twin;
     public int lastHit = 0;
     
     public Ball(Pong pong)
     {
         this.pong = pong;
         this.random = new Random();
-        spawn();
     }
     
-    public int getLastHit()
+    public void setOtherBall( Ball ball )
     {
-        return this.lastHit;
+        twin = ball;
     }
     
     // Update the ball's movement
@@ -31,6 +32,12 @@ public class Ball
 
         this.x += motionX * speed;
         this.y += motionY * speed;
+        
+        // Left or Right side
+        if( x <= pong.width / 2)
+            side = 1;
+        else
+            side = 2;
         
         // Don't let ball go out of bounds
         if(this.y + height - motionY > pong.height || this.y + motionY < 0)
@@ -102,11 +109,22 @@ public class Ball
         player.runSound();
     }
     
+    // Called by pong
+    public void firstSpawn()
+    {
+        this.spawn();
+    }
+    
     // Put new ball in center 
     private void spawn()
     {
         lastHit = 0;
-        this.x = pong.width / 2 - this.width / 2;
+        
+        if( twin.side == 1)
+            this.x = pong.width * 8/10 - this.width / 2;
+        else
+            this.x = pong.width * 2/10 - this.width / 2;
+            
         this.y = pong.height / 2 - this.height / 2;
 
         this.motionY = -2 + random.nextInt(4);

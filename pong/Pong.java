@@ -28,6 +28,7 @@ public class Pong implements ActionListener, KeyListener
     public Paddle player1;
     public Paddle player2;
     public Ball ball;
+    public Ball ball2;
     public Brick[] bricks;
     public Item[] items;
     public boolean bot = false, selectingDifficulty, helpMenu;
@@ -90,6 +91,15 @@ public class Pong implements ActionListener, KeyListener
         player1 = new Paddle(this, 1);
         player2 = new Paddle(this, 2);
         ball = new Ball(this);
+        ball2 = new Ball(this);
+        
+        ball.setOtherBall(ball2);
+        ball2.setOtherBall(ball);
+        ball.side = 1;
+        ball2.side = 2;
+        
+        ball.firstSpawn();
+        ball2.firstSpawn();
         
         // 10 x 5 grid of bricks
         bricks = new Brick[50];
@@ -173,7 +183,7 @@ public class Pong implements ActionListener, KeyListener
             Brick b = bricks[i];
             
             // Check existence
-            if( b != null && b.update(ball, player1, player2))
+            if( b != null && ( b.update(ball, player1, player2) || b.update(ball2, player1, player2)) )
             {
                 Item brickItem = b.getItem();
                 
@@ -227,13 +237,15 @@ public class Pong implements ActionListener, KeyListener
 
             if (botMoves < 10)
             {
-                if (player2.y + player2.height / 2 < ball.y)
+                Ball closestBall = ball.x >= ball2.x ? ball : ball2;
+                
+                if (player2.y + player2.height / 2 < closestBall.y)
                 {
                     player2.move(false);
                     botMoves++;
                 }
 
-                if (player2.y + player2.height / 2 > ball.y)
+                if (player2.y + player2.height / 2 > closestBall.y)
                 {
                     player2.move(true);
                     botMoves++;
@@ -252,6 +264,7 @@ public class Pong implements ActionListener, KeyListener
         }
 
         ball.update(player1, player2);
+        ball2.update(player1, player2);
         
         for( Item item : this.items )
             if( item != null )
@@ -490,13 +503,14 @@ public class Pong implements ActionListener, KeyListener
             player1.render(g);
             player2.render(g);
             ball.render(g);
+            ball2.render(g);
             
             // Bricks
             for (Brick b : bricks) {
                 if(b != null)
                     b.render(g);
-                else if (b != null && b.update(ball, player1, player2)) // Seems unecessary
-                    b.render(g);
+                //else if (b != null && b.update(ball, player1, player2)) // Seems unecessary
+                //    b.render(g);
             }
             
             // Items
