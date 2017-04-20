@@ -40,7 +40,7 @@ public class Pong implements ActionListener, KeyListener
     {
         MainMenu mm = new MainMenu();
         mm.setUpMenu();
-        pong = new Pong();
+       // pong = new Pong();
         
     	Audio player = new Audio("Automation");
         player.runBGM();
@@ -51,7 +51,7 @@ public class Pong implements ActionListener, KeyListener
     {
         Timer timer = new Timer(20, this);
         random = new Random();
-/*
+        
         jframe = new JFrame("Brick Pong");
         renderer = new Renderer();
 
@@ -60,7 +60,7 @@ public class Pong implements ActionListener, KeyListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.add(renderer);
         jframe.addKeyListener(this);
-*/
+
 
         // Save background image for update()
         try {
