@@ -180,9 +180,9 @@ public class MainMenu {
 		title.setFont(new Font("Verdana",1, 20));
 		top.add(title);
 		top.setBorder(new LineBorder(Color.BLACK));
-		menu.add(top);
+		 menu.add(top);
 		top.setVisible(true);
-		menu.add(top);
+		//menu.add(top);
 		
 		// title of game
 		titleText = new JButton("Breakout Ball");
@@ -249,6 +249,7 @@ public class MainMenu {
 		hp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				menu.setVisible(false);
 				showHelpMenu();
 			}
 		});
@@ -294,6 +295,8 @@ public class MainMenu {
 			{
 				levelMenu.setVisible(false);
 				// open level 1
+				Pong p = new Pong();
+				
 			}
 		});
 		
@@ -381,20 +384,142 @@ public class MainMenu {
 	{
 		
 		help.setVisible(true);
-		help.setLayout(new GridLayout(2, 4, 10, 10));
+
 		JPanel helpPanel = new JPanel(new BorderLayout());
 		JPanel helpGrid = new JPanel(new GridLayout(2, 4, 10, 10));
-		helpPanel.add(helpGrid, helpPanel.CENTER_ALIGNMENT);
-		JLabel helpTitle = new JLabel("HELP");
-		helpPanel.add(helpTitle, helpPanel.TOP_ALIGNMENT);
-		JLabel helpLabel = new JLabel("<html><br />Paddle<br>\tPlayer 1 - W (up), S (down)<br>\tPlayer 2 - Up Arrow (up), Down Arrow (down)</html>)");
-		helpLabel.setFont(new Font("Arial", 1, 20));
-		help.add(helpLabel);
-		JLabel helpL = new JLabel("HELP MENU", SwingConstants.CENTER);
-		helpL.setFont(new Font("Arial", 1, 20));
 		
-//		help.add(helpL);
-		helpL.setVisible(true);
+		JPanel helpTop = new JPanel();
+		JButton helpTitle = new JButton("HELP");
+		helpTitle.setFont(new Font("Verdana", 1, 20));
+		helpTop.add(helpTitle);
+		helpTop.setBorder(new LineBorder(Color.BLACK));
+		help.add(helpTop);
+		helpTop.setVisible(true);
+		
+		JButton helpTitleText = new JButton("HELP SCREEN");
+		helpTitleText.setBorder(new LineBorder(Color.black));
+		helpTitleText.setOpaque(false);
+		helpTitleText.setContentAreaFilled(false);
+		helpTitleText.setBorderPainted(false);
+		helpTitleText.setFont(new Font("Verdana", Font.PLAIN, 25));
+		
+		JButton item1 = new JButton("item1.png");
+		JButton item1Desc = new JButton("<html>Item 1 Description is that<br> is does things");
+		JButton item2 = new JButton("item2.png");
+		JButton item2Desc = new JButton("<html>Item 2 Description is that<br> is does things");
+		JButton item3 = new JButton("item3.png");
+		JButton item3Desc = new JButton("<html>Item 3 Description is that<br> is does things");
+		JButton item4 = new JButton("item4.png");
+		JButton item4Desc = new JButton("<html>Item 4 Description is that<br> is does things");
+		JButton item5 = new JButton("item5.png");
+		JButton item5Desc = new JButton("<html>Item 5 Description is that<br> is does things");
+		JButton item6 = new JButton("item6.png");
+		JButton item6Desc = new JButton("<html>Item 6 Description is that<br> is does things");
+		
+		JPanel helpInner = new JPanel(new GridLayout(6, 2, 0, 20));
+		helpInner.add(item1).setLocation(0, 0);
+		helpInner.add(item1Desc).setLocation(0, 1);
+		item1Desc.setOpaque(false);
+		item1Desc.setContentAreaFilled(false);
+		item1Desc.setBorderPainted(false);
+		helpInner.add(item2).setLocation(1, 0);
+		helpInner.add(item2Desc).setLocation(1, 1);
+		helpInner.add(item3).setLocation(2, 0);
+		helpInner.add(item3Desc).setLocation(2, 1);
+		helpInner.add(item4).setLocation(3, 0);
+		helpInner.add(item4Desc).setLocation(3, 1);
+		helpInner.add(item5).setLocation(4, 0);
+		helpInner.add(item5Desc).setLocation(4, 1);
+		helpInner.add(item6).setLocation(5, 0);
+		helpInner.add(item6Desc).setLocation(5, 1);
+		helpInner.setBorder(BorderFactory.createEmptyBorder(100, 50, 100, 50));
+		
+		/*
+		helpInner.add(Box.createRigidArea(new Dimension(5, 1)));
+		helpInner.add(item1).setLocation(0, 0);
+		helpInner.add(item1Desc).setLocation(0, 1);
+		helpInner.add(item2).setLocation(1, 0);
+		helpInner.add(item2Desc).setLocation(1, 1);
+		helpInner.add(item3).setLocation(2, 0);
+		helpInner.add(item3Desc).setLocation(2, 1);
+		helpInner.add(item4).setLocation(3, 0);
+		helpInner.add(item4Desc).setLocation(3, 1);
+		helpInner.add(item5).setLocation(4, 0);
+		helpInner.add(item5Desc).setLocation(4, 1);
+		helpInner.add(item6).setLocation(5, 0);
+		helpInner.add(item6Desc).setLocation(5, 1);
+		helpInner.setBorder(BorderFactory.createEmptyBorder(200, 400, 200, 400));
+		*/
+		help.add(helpInner);
+		
+		JLabel instLabel = new JLabel("<html>"
+				+ "HOW TO PLAY<br>"
+				+ "The goal of the game is to out-survive, and "
+				+ "out-score your opponent.<br>"
+				+ "To do this, control your paddle to deflect the ball away from your base. <br>"
+				+ "Watch out for items though! While some can help you, others will do damage, ensuring "
+				+ "a quick victory for your opponent.<br> "
+				+ ""
+				+ "</html>");
+		
+		//helpPanel.add(instLabel);
+		
+	
+		/*
+		// setting up the main menu
+		JPanel top = new JPanel();
+		JLabel title = new JLabel("Breakout Ball");
+		title.setFont(new Font("Verdana",1, 20));
+		top.add(title);
+		top.setBorder(new LineBorder(Color.BLACK));
+		menu.add(top);
+		top.setVisible(true);
+		//menu.add(top);
+		
+		// title of game
+		titleText = new JButton("Breakout Ball");
+		titleText.setBorder(new LineBorder(Color.black));
+		titleText.setOpaque(false);
+		titleText.setContentAreaFilled(false);
+		titleText.setBorderPainted(false);
+		titleText.setFont(new Font("Verdana", Font.PLAIN, 25));
+		
+		// buttons for menu navigation
+		p1 = new JButton("1 Player");
+		p1.setBorder(new LineBorder(Color.BLACK));
+		p1.setBackground(Color.WHITE);
+		p1.setOpaque(true);
+		p2 = new JButton("2 Player");
+		p2.setBorder(new LineBorder(Color.BLACK));
+		p2.setBackground(Color.WHITE);
+		p2.setOpaque(true);
+		op = new JButton("Options");
+		op.setBorder(new LineBorder(Color.BLACK));
+		op.setBackground(Color.WHITE);
+		op.setOpaque(true);
+		hp = new JButton("Help");
+		hp.setBorder(new LineBorder(Color.BLACK));
+		hp.setBackground(Color.WHITE);
+		hp.setOpaque(true);
+		qt = new JButton("Quit");
+		qt.setBorder(new LineBorder(Color.BLACK));
+		qt.setBackground(Color.WHITE);
+		qt.setOpaque(true);	
+		// adding proper bits into main panel
+		JPanel innerPanel = new JPanel(new GridLayout(0, 1, 50, 0));
+		innerPanel.add(titleText);
+		innerPanel.add(Box.createRigidArea(new Dimension(5, 10)));
+		innerPanel.add(p1);
+		innerPanel.add(p2);
+		innerPanel.add(op);
+		innerPanel.add(hp);
+		innerPanel.add(qt);
+		innerPanel.setOpaque(false);
+		innerPanel.setBorder(BorderFactory.createEmptyBorder(200, 100, 200, 100));
+		
+		menu.add(innerPanel);
+		 */
+		
 		
 		
 		/*
