@@ -8,7 +8,7 @@
 Only the first 50 non white space characters are read in as bricks. For bricks: 
 0 no brick, 1 no item, 2 paddle size increase, 3 one point, 4 damage, 5 health. 
 
-Difficulties not to scale
+Difficulties not to scale (Hard mode seems sufficiently difficult)
 
 easy
 1300000011
