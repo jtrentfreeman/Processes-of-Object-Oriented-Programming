@@ -130,29 +130,32 @@ public class Pong implements ActionListener, KeyListener
             }
 
             // Set blocks to null, give item, or neither
-            // 
+            int current;
             for( int i = 0; i < 5; i++)
             {
                 for( int j = 0; j < 10; j++)
                 {
+                    // Picks which design to use
+                    current = (gameDifficulty*5) + 10*i+j;
+                    
                     // 2: up paddle size, 3: add point, 4: damage, 5: health
-                    if( map.charAt(10*i+j) == '0' )
+                    if( map.charAt(current) == '0' )
                         bricks[10*i+j] = null;
                     
-                    else if( map.charAt(10*i+j) == '2' )
+                    else if( map.charAt(current) == '2' )
                         bricks[10*i+j].setItem(0,10*i+j);
                     
-                    else if( map.charAt(10*i+j) == '3' )
+                    else if( map.charAt(current) == '3' )
                         bricks[10*i+j].setItem(1,10*i+j);
                     
-                    else if( map.charAt(10*i+j) == '4' )
+                    else if( map.charAt(current) == '4' )
                         bricks[10*i+j].setItem(2,10*i+j);
                     
-                    else if( map.charAt(10*i+j) == '5' )
+                    else if( map.charAt(current) == '5' )
                         bricks[10*i+j].setItem(3,10*i+j);
                     
                     // Random non-null if unknown char
-                    else if( map.charAt(10*i+j) != '1' )
+                    else if( map.charAt(current) != '1' )
                         bricks[10*i+j].setItem((int) ( Math.random() * 4) + 1, 10*i+j);
                     
                     numBricksLeft++;
