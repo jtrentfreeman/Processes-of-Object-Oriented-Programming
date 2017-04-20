@@ -26,6 +26,7 @@ public class Pong implements ActionListener, KeyListener
     public boolean bot = false, selectingDifficulty, helpMenu;
     public boolean w, s, up, down;
     public int gameDifficulty = 5;
+    public int multiDifficulty = 3;	// difficulty for multiplayer?
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
     public int gameStatus = 0, scoreLimit = 15, playerWon;
@@ -40,7 +41,7 @@ public class Pong implements ActionListener, KeyListener
     {
         MainMenu mm = new MainMenu();
         mm.setUpMenu();
-        // pong = new Pong();
+//		pong = new Pong();
         
     	Audio player = new Audio("Automation");
         player.runBGM();
@@ -81,6 +82,11 @@ public class Pong implements ActionListener, KeyListener
         
         timer.start();
     }
+	
+	public void changeDifficulty(int diff)
+	{
+		gameDifficulty = diff;
+	}
 
     public void start()
     {
