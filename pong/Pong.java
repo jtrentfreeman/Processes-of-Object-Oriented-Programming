@@ -27,17 +27,18 @@ public class Pong implements ActionListener, KeyListener
     public Paddle player2;
     public Ball ball;
     public Ball ball2;
+    
     public Brick[] bricks;
     public Item[] items;
     public int numBricksLeft = 0;
     public boolean bot = false, selectingDifficulty, helpMenu;
+    public int botDifficulty, botMoves, botCooldown = 0;
     public boolean w, s, up, down;
-    public boolean invisBrick = false; // Bricks appear briefly when hit
+    public int gameDifficulty = 5; // 1-2 easy, 3-4 moderate, 5-6 hard
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
     public int gameStatus = 0, scoreLimit = 25, playerWon;
 
-    public int botDifficulty, botMoves, botCooldown = 0;
     public boolean Windows;
     public Random random;
     public JFrame jframe;
@@ -200,6 +201,7 @@ public class Pong implements ActionListener, KeyListener
                 
                 // Delete Brick
                 bricks[i] = null;
+                numBricksLeft--;
             }
         }
         

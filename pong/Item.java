@@ -7,28 +7,19 @@ public class Item
 {
     private int effect;
     private int x, y, width = 20, height = 20;
-    private int speed = 5;
+    private int speed = 10;
     private int number;
     private Pong pong;
     private Brick brick;
 
-    // To do:
-    // adjust A.I. to recognize
-    // 
-
     public Item(Pong pong, int effect, Brick brick, int number)
     {
-        //this.x = brick.getX() + (brick.getWidth() / 2);
-        //this.y = brick.getY() + (brick.getHeight() / 2);
         this.number = number;
         this.effect = effect;
         this.brick = brick;
         this.pong = pong;
         
-        /*// Prepare random direction (L or R)
-        if((int) (Math.random() * 2) == 1)
-            this.speed = - this.speed;
-        */
+        speed = 10 + pong.gameDifficulty;
         
         // Prepare direction by board side
         if( number % 10 < 5 )
@@ -69,13 +60,6 @@ public class Item
         }
     }
 
-    // Currently, no file exists
-    /*private void sound(String fileName)
-    {
-        Audio player = new Audio(fileName);
-        player.runSound();
-    }*/
-
     // Put item where brick was
     // Spawns after brick breaks
     public void spawn()
@@ -106,14 +90,25 @@ public class Item
             g.setColor(Color.GREEN);
         
         else if( effect == 2 )
+        {
             g.setColor(Color.RED);
+            g.fillOval(x-width/2 -1, y-height/2 -1, width +2, height +2);
+            
+            return;
+        }
         
-        else if( effect == 3 )
+        if( effect == 3 )
+        {
             g.setColor(Color.PINK);
+            g.fillRect(x-width/2 -1, y-height/2 -1, width +2, height +2);
+            
+            return;
+        }
         
         else
             g.setColor(Color.WHITE);
         
-        g.fillOval(x, y, width, height);
+        g.fillOval(x-width/2, y-height/2, width, height);
+        
     }
 }

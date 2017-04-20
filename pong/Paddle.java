@@ -6,7 +6,7 @@ import java.awt.Graphics;
 public class Paddle
 {
     public int paddleNumber;
-    public int x, y, width = 35, height = 250;
+    public int x, y, width = 35, height = 250, originalHeight = 250;
     private int powerUpDuration = 0;
     private int maxHealth = 3;
     private int health;
@@ -16,9 +16,15 @@ public class Paddle
 
     public Paddle(Pong pong, int paddleNumber)
     {
+        if(paddleNumber == 1)
+            originalHeight = 260 - 10*pong.gameDifficulty;
+        if(pong.bot && paddleNumber == 2)
+            originalHeight = 300;
+        height = originalHeight;
+        health = maxHealth;
+        
         this.paddleNumber = paddleNumber;
         this.pong = pong;
-        health = maxHealth;
 
 	// Both x locations are on the left side of the paddle
         if(paddleNumber == 1) x = 0;
@@ -65,18 +71,18 @@ public class Paddle
             }
             
             powerUpDuration = 200;
-            height = 300;
+            height = originalHeight - 5*(pong.gameDifficulty);
             
         }
         else if( effect == 1 )
-            score++;
+            this.score++;
         
         else if( effect == 2 )
-            health--;
+            this.health--;
         
         else if( effect == 3 )
             if( health < maxHealth )
-                health++;
+                this.health++;
         
     }
     

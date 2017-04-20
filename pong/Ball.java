@@ -28,7 +28,18 @@ public class Ball
     // Update the ball's movement
     public void update(Paddle paddle1, Paddle paddle2)
     {
-        int speed = 8 + ( 50 - pong.numBricksLeft ) / 10;
+        int speed;
+        
+        if( pong.numBricksLeft <= 6)
+            speed = 14 + pong.gameDifficulty/2;
+        else
+            speed = 7 + ( 50 - pong.numBricksLeft )/10 + pong.gameDifficulty/2;
+        
+        // No brick stealing
+        if( lastHit == 1 && x >= pong.width/2 )
+            lastHit = 0;
+        else if( lastHit == 2 && x <= pong.width/2)
+            lastHit = 0;
 
         this.x += motionX * speed;
         this.y += motionY * speed;
