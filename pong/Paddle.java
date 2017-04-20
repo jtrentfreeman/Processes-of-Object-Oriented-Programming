@@ -12,6 +12,7 @@ public class Paddle
     private int health;
     private Pong pong;
     public int score;
+    public int direction = 0;
 
     public Paddle(Pong pong, int paddleNumber)
     {

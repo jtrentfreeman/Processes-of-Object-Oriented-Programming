@@ -44,7 +44,11 @@ public class Brick {
             Audio player = new Audio("brick");
             player.runSound();
             
-            ball.motionX = -(ball.motionX);
+            // How does it bounce?
+            if( ball.x + ball.width/2 > x && ball.x + ball.width/2 < x + width )
+                ball.motionY = -(ball.motionY);
+            else
+                ball.motionX = -(ball.motionX);
             
             if(ball.lastHit == 1)
                 p1.score += this.points;

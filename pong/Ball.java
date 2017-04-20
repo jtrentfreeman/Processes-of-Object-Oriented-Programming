@@ -28,7 +28,7 @@ public class Ball
     // Update the ball's movement
     public void update(Paddle paddle1, Paddle paddle2)
     {
-        int speed = 8;
+        int speed = 8 + ( 50 - pong.numBricksLeft ) / 10;
 
         this.x += motionX * speed;
         this.y += motionY * speed;
@@ -48,7 +48,7 @@ public class Ball
             if(this.motionY < 0)
             {
                 this.y = 0;
-                this.motionY = random.nextInt(4);
+                this.motionY = random.nextInt(2);
 
                 if(motionY == 0)  motionY = 1;
             }
@@ -56,7 +56,7 @@ public class Ball
             // Upper bound
             else
             {
-                this.motionY = -random.nextInt(4);
+                this.motionY = -random.nextInt(2);
                 this.y = pong.height - height;
 
                 if(motionY == 0) motionY = -1;
@@ -69,7 +69,7 @@ public class Ball
             sound("paddle");
             lastHit = 1;
             this.motionX = 1;
-            this.motionY = -2 + random.nextInt(4);
+            this.motionY = this.motionY + 4/3 * paddle1.direction;
 
             if(motionY == 0) motionY = 1;
 
@@ -81,7 +81,7 @@ public class Ball
             sound("paddle");
             lastHit = 2;
             this.motionX = -1;
-            this.motionY = -2 + random.nextInt(4);
+            this.motionY = this.motionY + 4/3 * paddle2.direction;
 
             if(motionY == 0) motionY = 1;
 
@@ -121,18 +121,22 @@ public class Ball
         lastHit = 0;
         
         if( twin.side == 1)
+        {
             this.x = pong.width * 8/10 - this.width / 2;
+            this.motionX = -1;
+        }
         else
+        {
             this.x = pong.width * 2/10 - this.width / 2;
+            this.motionX = 1;
+        }
             
         this.y = pong.height / 2 - this.height / 2;
 
-        this.motionY = -2 + random.nextInt(4);
+        this.motionY = -1 + random.nextInt(2);
 
         if(motionY == 0) motionY = 1;
-
-        if(random.nextBoolean()) motionX = 1;
-        else motionX = -1;
+        
     }
     
     // Check where the ball hits; 0 = nothing, 1 = bounce, 2 = score
