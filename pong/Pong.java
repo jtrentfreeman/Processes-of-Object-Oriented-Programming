@@ -1,19 +1,27 @@
 package pong;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Random;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 
 public class Pong implements ActionListener, KeyListener
 {
     public static Pong pong;
-    public int width = 1400, height = 700;
+    public int width = 1350, height = 700;
     public Renderer renderer;
     public Paddle player1;
     public Paddle player2;
@@ -23,15 +31,14 @@ public class Pong implements ActionListener, KeyListener
     public Brick[] bricks;
     public Item[] items;
     public int numBricksLeft = 0;
-    public boolean bot = false, selectingDifficulty, helpMenu;
+    public boolean bot = false, selectingDifficulty, helpMenu, leaderBoard;
+    public int botDifficulty, botMoves, botCooldown = 0;
     public boolean w, s, up, down;
-    public int gameDifficulty = 5;
-    public int multiDifficulty = 3;	// difficulty for multiplayer?
+    public int gameDifficulty = 3; // 1-2 easy, 3-4 moderate, 5-6 hard
 
     // 0 = Menu, 1 = Paused, 2 = Playing, 3 = Over
-    public int gameStatus = 0, scoreLimit = 15, playerWon;
+    public int gameStatus = 0, scoreLimit = 25, playerWon;
 
-    public int botDifficulty, botMoves, botCooldown = 0;
     public boolean Windows;
     public Random random;
     public JFrame jframe;
@@ -39,20 +46,16 @@ public class Pong implements ActionListener, KeyListener
     
     public static void main(String[] args)
     {
-        MainMenu mm = new MainMenu();
-        mm.setUpMenu();
-//		pong = new Pong();
-        
-    	Audio player = new Audio("Automation");
+        pong = new Pong();
+	
+	Audio player = new Audio("Automation");
         player.runBGM();
     }
 
-
-	public Pong()
+    public Pong()
     {
         Timer timer = new Timer(20, this);
         random = new Random();
-        
         jframe = new JFrame("Brick Pong");
         renderer = new Renderer();
 
@@ -61,8 +64,7 @@ public class Pong implements ActionListener, KeyListener
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.add(renderer);
         jframe.addKeyListener(this);
-
-
+        
         // Save background image for update()
         try {
             String OS = System.getProperty("os.name");
@@ -73,20 +75,15 @@ public class Pong implements ActionListener, KeyListener
 
             // Specify proper file path and have .wav audio file.
             if( Windows )
-                image = ImageIO.read(new File("./src/pong/genericBackground.jpg"));
-            else
                 image = ImageIO.read(new File("./pong/genericBackground.jpg"));
+            else
+                image = ImageIO.read(new File("./src/pong/genericBackground.jpg"));
             
         } catch(Exception e) {
         }
         
         timer.start();
     }
-	
-	public void changeDifficulty(int diff)
-	{
-		gameDifficulty = diff;
-	}
 
     public void start()
     {
@@ -123,9 +120,9 @@ public class Pong implements ActionListener, KeyListener
 
             // Get correct path
             if( Windows )
-                scanner = new Scanner( new File("./src/pong/BrickGrid.txt"));
-            else
                 scanner = new Scanner( new File("./pong/BrickGrid.txt"));
+            else
+                scanner = new Scanner( new File("./src/pong/BrickGrid.txt"));
 
             String map = "";
             String more;
@@ -136,17 +133,19 @@ public class Pong implements ActionListener, KeyListener
             }
 
             // Set blocks to null, give item, or neither
+            // 
             int current;
             for( int i = 0; i < 5; i++)
             {
                 for( int j = 0; j < 10; j++)
                 {
-                    // Picks which design to use
-                    current = (gameDifficulty*5) + 10*i+j;
-                    
+                	current = (gameDifficulty * 5) + 10*i+j;
                     // 2: up paddle size, 3: add point, 4: damage, 5: health
                     if( map.charAt(current) == '0' )
+                    {
                         bricks[10*i+j] = null;
+                        continue;
+                    }
                     
                     else if( map.charAt(current) == '2' )
                         bricks[10*i+j].setItem(0,10*i+j);
@@ -358,11 +357,44 @@ public class Pong implements ActionListener, KeyListener
         // Enter main menu
         else if (id == KeyEvent.VK_ESCAPE && (gameStatus == 2 || gameStatus == 3))
             gameStatus = 0;
-	    
-        // View help menu
+
+        else if (id == KeyEvent.VK_0)
+            gameDifficulty = 0;
+		
+        else if (id == KeyEvent.VK_1)
+            gameDifficulty = 1;
+
+        else if (id == KeyEvent.VK_2)
+            gameDifficulty = 2;
+
+        else if (id == KeyEvent.VK_3)
+            gameDifficulty = 3;
+
+        else if (id == KeyEvent.VK_4)
+            gameDifficulty = 4;
+
+        else if (id == KeyEvent.VK_5)
+            gameDifficulty = 5;
+
+        else if (id == KeyEvent.VK_6)
+            gameDifficulty = 6;
+
+        else if (id == KeyEvent.VK_L && gameStatus == 0 && leaderBoard == false)
+        {
+            leaderBoard = true;
+			helpMenu = false;
+        }
+
+        else if (id == KeyEvent.VK_L && gameStatus == 0 && leaderBoard == true)
+        {
+            leaderBoard = false;
+        }
+        
+	// View help menu
         else if (id == KeyEvent.VK_H && gameStatus == 0 && helpMenu == false)
         {
             helpMenu = true;
+			leaderBoard = false;
         }
 
         // Close help menu
@@ -415,6 +447,7 @@ public class Pong implements ActionListener, KeyListener
             if( !down )
                 player2.direction = 2;
         }
+        
     }
 
     @Override
@@ -437,10 +470,10 @@ public class Pong implements ActionListener, KeyListener
         // Momentum for slight ball motion
         if(gameStatus == 2)
         {
-            if( !w && !s )
-                player1.direction = 0;
-            if( !bot && !up && !down )
-                player2.direction = 0;
+        if( !w && !s )
+            player1.direction = 0;
+        if( !bot && !up && !down )
+            player2.direction = 0;
         }
     }
 
@@ -458,7 +491,7 @@ public class Pong implements ActionListener, KeyListener
         g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
         // Enter menu
-        if (gameStatus == 0 && helpMenu == false)
+        if (gameStatus == 0 && helpMenu == false && leaderBoard == false)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
@@ -470,8 +503,8 @@ public class Pong implements ActionListener, KeyListener
             {
                 g.setFont(new Font("Arial", 1, 30));
 
-                g.drawString("Press Space to Play", width / 2 - 150, height / 2 - 25);
-                g.drawString("Press Shift to Play with Bot", width / 2 - 200, height / 2 + 25);
+                g.drawString("Select a Difficulty: 1, 2, 3, 4, 5, 6", width / 2 - 210, height / 2 - 25);
+                g.drawString("Press Shift to Play with Bot", width / 2 - 180, height / 2 + 25);
                 g.drawString("<< Score Limit: " + scoreLimit + " >>", width / 2 - 150, height / 2 + 75);
             }
             
@@ -490,9 +523,26 @@ public class Pong implements ActionListener, KeyListener
             
             numBricksLeft = 0;
         }
-	
-        // help menu
-        if (helpMenu)
+       
+        if(leaderBoard)
+        {
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", 1, 50));
+            g.drawString("LEADERBOARD", width / 2 - 180, height / 2 - 250);
+            g.setFont(new Font("Arial", 1, 20));
+            String numOne = "#1 - 73";
+            String numTwo = "#2 - 68";
+            String numThree = "#3 - 64";
+            String numFour = "#4 - 51";
+            String numFive = "#5 - 48";
+            g.drawString(numOne, 100, height / 2 - 180);
+            g.drawString(numTwo, 100, height / 2 - 140);
+            g.drawString(numThree, 100, height / 2 - 100);
+            g.drawString(numFour, 100, height / 2 - 60);
+            g.drawString(numFive, 100, height / 2 - 20);
+        }
+	// help menu
+	if (helpMenu)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
@@ -517,22 +567,14 @@ public class Pong implements ActionListener, KeyListener
             g.drawString("h", 150, height / 2 + 140);
         }
 
-        // Pause screen
-        if (gameStatus == 1)
-        {
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", 1, 50));
-            g.drawString("Pause", width / 2 - 103, height / 2 - 25);
-        }
-
         // Paused or Playing
         if (gameStatus == 1 || gameStatus == 2)
         {
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", 1, 50));
 
-            g.drawString(String.valueOf(player1.score), width / 2 - 90, 50);
-            g.drawString(String.valueOf(player2.score), width / 2 + 65, 50);
+            g.drawString(String.valueOf(player1.score), width * 3/10 - 90, 50);
+            g.drawString(String.valueOf(player2.score), width * 7/10 + 65, 50);
 
             player1.render(g);
             player2.render(g);
@@ -543,6 +585,8 @@ public class Pong implements ActionListener, KeyListener
             for (Brick b : bricks) {
                 if(b != null)
                     b.render(g);
+                //else if (b != null && b.update(ball, player1, player2)) // Seems unecessary
+                //    b.render(g);
             }
             
             // Items
@@ -550,6 +594,22 @@ public class Pong implements ActionListener, KeyListener
                 if( item != null )
                     item.render(g);
             
+        }
+
+        // Pause screen
+        if (gameStatus == 1)
+        {
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect( width/2 - 210, height/2 - 110, 420, 145);
+            //g.fillRect( 0, height/2 - 110, width, 145);
+            
+            g.setColor(Color.BLACK);
+            g.fillRect( width/2 - 200, height/2 - 100, 400, 125);
+            //g.fillRect( 0, height/2 - 100, width, 125);
+            
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", 1, 50));
+            g.drawString("Pause", width / 2 - 75, height / 2 - 19);
         }
 
         // Game Over
@@ -574,5 +634,4 @@ public class Pong implements ActionListener, KeyListener
             numBricksLeft = 0;
         }
     }
-
 }
