@@ -62,7 +62,7 @@ public class Paddle
         if( effect == 0 )
         {
             // Adjust paddle position so growth doesn't extend out of bounds
-            if( powerUpDuration == 0 )
+            if( powerUpDuration == 2 )
             {
                 if( y + height + 50 >= pong.height )
                     y -= 50;
@@ -74,13 +74,13 @@ public class Paddle
             height = originalHeight - 5*(pong.gameDifficulty);
             
         }
-        else if( effect == 1 )
+        else if( effect == 3 )
             this.score++;
         
-        else if( effect == 2 )
+        else if( effect == 4 )
             this.health--;
         
-        else if( effect == 3 )
+        else if( effect == 5 )
             if( health < maxHealth )
                 this.health++;
         

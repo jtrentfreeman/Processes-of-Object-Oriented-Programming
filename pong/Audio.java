@@ -15,7 +15,8 @@ public class Audio {
     private ArrayList<String> musicFiles;
     private int currentSongIndex;
 
-    public Audio(String... files){
+    public Audio(String... files) {
+        
         musicFiles = new ArrayList<String>();
         
         String OS = System.getProperty("os.name");
@@ -27,10 +28,10 @@ public class Audio {
         // Specify proper file path and have .wav audio file.
         if( Windows )
             for(String file : files)
-                musicFiles.add("./src/pong/" + file + ".wav");
+                musicFiles.add(file + ".wav"); // ("./src/pong/" + file + ".wav")
         else
             for(String file : files)
-                musicFiles.add("./pong/" + file + ".wav");
+                musicFiles.add(file + ".wav");
     }
 
     private void playBGM(String fileName){

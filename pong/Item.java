@@ -83,13 +83,13 @@ public class Item
     public void render( Graphics g )
     {
         // 0: up paddle size, 1: add point, 2: damage, 3: health
-        if( effect == 0 )
+        if( effect == 2 )
             g.setColor(Color.YELLOW);
         
-        else if( effect == 1 )
+        else if( effect == 3 )
             g.setColor(Color.GREEN);
         
-        else if( effect == 2 )
+        else if( effect == 4 )
         {
             g.setColor(Color.RED);
             g.fillOval(x-width/2 -1, y-height/2 -1, width +2, height +2);
@@ -97,7 +97,7 @@ public class Item
             return;
         }
         
-        if( effect == 3 )
+        else if( effect == 5 )
         {
             g.setColor(Color.PINK);
             g.fillRect(x-width/2 -1, y-height/2 -1, width +2, height +2);

@@ -8,6 +8,7 @@ public class Ball
 {
     public int x, y, width = 25, height = 25;
     public int motionX, motionY;
+    public int baseSpeed = 15;
     public int side = 1;
     public Random random;
     public Pong pong;
@@ -17,6 +18,7 @@ public class Ball
     public Ball(Pong pong)
     {
         this.pong = pong;
+        this.baseSpeed += pong.gameDifficulty;
         this.random = new Random();
     }
     
@@ -30,10 +32,12 @@ public class Ball
     {
         int speed;
         
-        if( pong.numBricksLeft <= 6)
-            speed = 14 + pong.gameDifficulty/2;
+        if( pong.numBricksLeft <= 8)
+            speed = 23;
+        else if( pong.numBricksLeft > 14)
+            speed = baseSpeed - 2;
         else
-            speed = 7 + ( 50 - pong.numBricksLeft )/10 + pong.gameDifficulty/2;
+            speed = baseSpeed;
         
         // No brick stealing
         if( lastHit == 1 && x >= pong.width/2 )
@@ -80,7 +84,7 @@ public class Ball
             sound("paddle");
             lastHit = 1;
             this.motionX = 1;
-            this.motionY = this.motionY + 4/3 * paddle1.direction;
+            this.motionY = this.motionY + random.nextInt(1) * paddle1.direction;
 
             if(motionY == 0) motionY = 1;
 
@@ -92,7 +96,7 @@ public class Ball
             sound("paddle");
             lastHit = 2;
             this.motionX = -1;
-            this.motionY = this.motionY + 4/3 * paddle2.direction;
+            this.motionY = this.motionY + random.nextInt(1) * paddle2.direction;
 
             if(motionY == 0) motionY = 1;
 
